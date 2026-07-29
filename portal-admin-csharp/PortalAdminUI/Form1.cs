@@ -56,6 +56,10 @@ namespace PortalAdminUI
                         if (result != null) {
                             int roleID = Convert.ToInt32(result);
                             MessageBox.Show($"Đăng nhập thành công! Mã quyền: {roleID}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            frmMain frmMain = new frmMain();
+                            this.Hide();
+                            frmMain.ShowDialog();
+                            this.Close();
                         }
                         else
                         {
