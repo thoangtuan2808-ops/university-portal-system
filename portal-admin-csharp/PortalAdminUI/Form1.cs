@@ -34,7 +34,8 @@ namespace PortalAdminUI
                 MessageBox.Show("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if(!Regex.IsMatch(username, @"^[a-zA-Z0-9]+$"))
+            username = Regex.Replace(username, @"\s+", "");//xóa khoảng trắng tàng hình
+            if (!Regex.IsMatch(username, @"^[a-zA-Z0-9_]+$"))
             {
                 MessageBox.Show("Tên đăng nhập chứa ký tự không hợp lệ!", "Lỗi bảo mật", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
