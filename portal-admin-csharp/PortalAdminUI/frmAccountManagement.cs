@@ -1,4 +1,8 @@
-﻿using System;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,33 +18,30 @@ namespace PortalAdminUI
 {
     public partial class frmAccountManagement : Form
     {
-        string connectionString = @"Server=LAPTOP-GGRD5EEU;Database=UniversityPortal;Trusted_Connection=True;";
         public frmAccountManagement()
         {
             InitializeComponent();
         }
-        private void Load_Data()
+        private async void Load_Data()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
-                    conn.Open();
-                    string query = "SELECT UserID, UserName, Email, RoleID, IsActive, CreateAt FROM Users";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        //SqlDataAdapter chở dữ liệu từ sql về c#
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                    using (HttpClient client = new HttpClient()) {
+                        HttpResponseMessage reponse = await client.GetAsync("http://localhost:8080/UniversityPortalBackend/api/users");
+                        if (reponse.IsSuccessStatusCode) { 
+                            string jsonReponse = await reponse.Content.ReadAsStringAsync();
+                            List<UserDTO> userList = JsonConvert.DeserializeObject<List<UserDTO>>(jsonReponse);
+                            dgvUsers.DataSource = userList;
+                        }
+                        else
                         {
-                            DataTable dt = new DataTable(); //tạo khay rỗng
-                            adapter.Fill(dt); //đổ dữ liệu vào khay
-                            dgvUsers.DataSource = dt;
+                            MessageBox.Show("Không thể lấy dữ liệu từ máy chủ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch(Exception ex) {
+                    MessageBox.Show("Lỗi kết nối API: "+ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
             }
         }
@@ -67,39 +68,47 @@ namespace PortalAdminUI
             Load_Data();
         }
 
-        private void khóaXóaTàiKhoảnToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void khóaXóaTàiKhoảnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (dgvUsers.CurrentRow != null)
             {
-                int userID = Convert.ToInt32(dgvUsers.CurrentRow.Cells["UserID"].Value);
-                string userName = dgvUsers.CurrentRow.Cells["UserName"].Value.ToString();
+                int userId = Convert.ToInt32(dgvUsers.CurrentRow.Cells["UserId"].Value);
+                string userName = dgvUsers.CurrentRow.Cells["userName"].Value.ToString();
                 DialogResult result = MessageBox.Show("Bạn có muốn xóa tài khoản [{userName}] không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    string connectionString = @"Server=LAPTOP-GGRD5EEU; Database=UniversityPortal; Trusted_Connection=True";
-                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         try
                         {
-                            conn.Open();
-                            string query = "UPDATE Users SET IsActive = 0 WHERE UserID = @UserID";
-                            using (SqlCommand cmd = new SqlCommand(query, conn))
-                            {
-                                cmd.Parameters.AddWithValue("@UserID", userID);
-                                cmd.ExecuteNonQuery();
-                                MessageBox.Show("Đã khóa/xóa tài khoản!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            //gói thông tin id để ném sang java
+                            using (HttpClient client = new HttpClient()) {
+                                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("userId", userId.ToString())
+                                });
+
+                                //bắn post request đến API lock
+                                HttpResponseMessage reponse = await client.PostAsync("http://localhost:8080/UniversityPortalBackend/api/users/lock", content);
+                                if (reponse.IsSuccessStatusCode) { 
+                                    MessageBox.Show("Khóa tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information );
+                                    Load_Data();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Lỗi từ máy chủ khi khóa tài khoản.", "Lỗi", MessageBoxButtons.OK,MessageBoxIcon.Error );
+                                }
                             }
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Lỗi khi khóa/xóa tài khoản!" + ex.Message, "Lỗi hệ thống!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Lỗi kết nối API: "+ ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error );
                         }
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn một tài khoản trong danh sách để khóa/xóa!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               MessageBox.Show("Vui lòng chọn một tài khoản trong danh sách để khóa!","Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning );
             }
         }
 
@@ -116,6 +125,11 @@ namespace PortalAdminUI
             {
                 MessageBox.Show("Vui lòng chọn một tài khoản trong danh sách để cập nhật!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void dgvUsers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

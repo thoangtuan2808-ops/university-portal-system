@@ -1,4 +1,8 @@
-﻿using System;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,7 +29,7 @@ namespace PortalAdminUI
 
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private async void btnLogin_Click(object sender, EventArgs e) ///async để gọi api bất đồng bộ tránh bị đơ giao diện
         {
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
@@ -40,22 +44,27 @@ namespace PortalAdminUI
                 MessageBox.Show("Tên đăng nhập chứa ký tự không hợp lệ!", "Lỗi bảo mật", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            string connectionString = @"Server=LAPTOP-GGRD5EEU;Database=UniversityPortal;Trusted_Connection=True;";
-
-            using (SqlConnection conn = new SqlConnection(connectionString)) {
-                try
-                {
-                    conn.Open();
-                    //query raw test luồng
-                    string query = "SELECT RoleID FROM Users WHERE Username = @Username AND IsActive=1";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
+            {
+                using (HttpClient client = new HttpClient()) {
+                    var content = new FormUrlEncodedContent(new[]
                     {
-                        //tham số para an toàn
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        object result = cmd.ExecuteScalar();
-                        if (result != null) {
-                            int roleID = Convert.ToInt32(result);
-                            MessageBox.Show($"Đăng nhập thành công! Mã quyền: {roleID}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        new KeyValuePair<string, string>("username", username),
+                        new KeyValuePair<string, string> ("password", password)
+                    });
+                    HttpResponseMessage reponse = await client.PostAsync("http://localhost:8080/UniversityPortalBackend/api/login", content);
+                    string jsonReponse = await reponse.Content.ReadAsStringAsync();
+                    LoginReponse result = JsonConvert.DeserializeObject<LoginReponse>(jsonReponse);
+                    if (result != null && result.status == "success")
+                    {
+                        // --- CHỐT CHẶN 1: KIỂM TRA QUYỀN ---
+                        if (result.roleId == 1)
+                        {
+                            // 1. Cất thẻ Token vào "ví" Program
+                            Program.CurrentUserToken = result.token;
+
+                            // 2. Mở cửa cho Admin
+                            MessageBox.Show($"Đăng nhập thành công! Mã quyền: {result.roleId}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             frmMain frmMain = new frmMain();
                             this.Hide();
                             frmMain.ShowDialog();
@@ -63,18 +72,29 @@ namespace PortalAdminUI
                         }
                         else
                         {
-                            MessageBox.Show("Sai tài khoản, mật khẩu hoặc tài khoản đã bị khóa!", "Lỗi đăng nhập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            // Đá văng Sinh viên/Giảng viên
+                            MessageBox.Show("Cảnh báo: Tài khoản của bạn không có quyền truy cập hệ thống Quản trị!", "Truy cập bị từ chối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
+                    else
+                    {
+                        string errorMsg = result != null ? result.message : "Đăng nhập thất bại";
+                        MessageBox.Show(errorMsg, "Lỗi đăng nhập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                catch (Exception ex) 
-                {
-                    MessageBox.Show("Lỗi kết nối CSDL: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error); 
-                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Lỗi kết nối máy chủ API: " +ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtUsername_TextChanged(object sender, EventArgs e)
         {
 
         }

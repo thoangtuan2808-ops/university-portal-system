@@ -1,6 +1,7 @@
 package service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.sql.DecodeCaseFragment;
 import org.mindrot.jbcrypt.BCrypt;
@@ -84,5 +85,20 @@ public class UserService {
 			System.out.println("Từ chối truy cập: Token không hợp lệ hoặc hết hạn.");
 			return false;
 		}
+    }
+    public List<User> getAllUsers(){
+    	return userDAO.getAllUsers();
+    }
+    public boolean lockUser(int userId) {
+    	return userDAO.lockUser(userId);
+    }
+    public boolean addUser(User user) {
+    	return userDAO.addUser(user);
+    }
+    public boolean updateUser(User user) {
+    	return userDAO.updateUser(user);
+    }
+    public User getUserById(int userId) {
+        return userDAO.getUserById(userId);
     }
 }

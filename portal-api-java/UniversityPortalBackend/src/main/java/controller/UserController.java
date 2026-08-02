@@ -2,11 +2,15 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 
 import entity.User;
 import service.UserService;
@@ -40,7 +44,9 @@ public class UserController extends HttpServlet {
 
         // Trả kết quả về cho Client dưới dạng chuỗi chuẩn JSON
         if (loginUser != null) {
-            out.print("{\"status\": \"success\", \"message\": \"Đăng nhập thành công\", \"roleId\": " + loginUser.getRoleId() + "}");
+        	// phát hành token
+        	String token = userService.generateToken(loginUser);
+            out.print("{\"status\":\"success\", \"roleId\":" + loginUser.getRoleId() + ", \"token\":\"" + token + "\"}");
         } else {
             out.print("{\"status\": \"error\", \"message\": \"Sai tài khoản hoặc mật khẩu hoặc bị khóa\"}");
         }

@@ -27,5 +27,15 @@ namespace PortalAdminUI
             frmAccountManagement frmAccountManagement = new frmAccountManagement();
             frmAccountManagement.ShowDialog();
         }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void hệThốngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

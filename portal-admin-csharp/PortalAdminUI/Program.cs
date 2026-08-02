@@ -11,6 +11,7 @@ namespace PortalAdminUI
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        public static string CurrentUserToken = "";
         [STAThread]
         static void Main()
         {
