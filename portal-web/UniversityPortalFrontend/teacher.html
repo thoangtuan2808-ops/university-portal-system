@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIVERSITY - Bảng Điều Khiển Giảng Viên</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/teacher.css">
+</head>
+<body>
+
+    <!-- 1. HEADER -->
+    <header class="main-header">
+        <div class="header-left">
+            <button id="toggleSidebarBtn" class="hamburger-btn" title="Thu gọn/Mở rộng Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="header-logo">
+                <i class="fa-solid fa-university"></i>
+            </div>
+            <h1 class="header-title">UNIVERSITY</h1>
+        </div>
+        
+        <!-- Header Right: Teacher Avatar & Dropdown -->
+        <div class="header-right">
+            <div class="user-profile" id="userProfileBtn">
+                <i class="fa-solid fa-circle-user avatar-icon"></i>
+            </div>
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-header">
+                    <p class="teacher-name">PGS. TS. Trần Văn B</p> <!-- Họ và Tên -->
+                    <p class="teacher-id">Tài khoản: GV98765</p> <!-- Tài Khoản -->
+                </div>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa-solid fa-address-card"></i> Thông tin cá nhân</a></li>
+                    <li><a href="#"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a></li>
+                    <li class="logout-btn"><a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- 3. LEFT SIDEBAR (Menu của Giảng viên) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                
+                <!-- Menu -->
+                <ul class="sidebar-menu expanded-menu">
+                    <li class="active">
+                        <a href="#"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-bell"></i> Thông báo từ ban quản trị</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-file-lines"></i> Quản lý đề cương môn học</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-calendar-check"></i> Phân công giảng dạy / Đăng ký lịch dạy</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-chart-pie"></i> Thống kê giờ giảng</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-calendar-week"></i> Lịch giảng dạy dạng tuần</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-calendar-days"></i> Lịch giảng dạy học kỳ</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-clipboard-user"></i> Điểm danh sinh viên</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-marker"></i> Quản lý điểm</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-users-rectangle"></i> Quản lý lớp học phần</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-user-tie"></i> Cố vấn học tập</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-file-signature"></i> Quản lý Đồ án / Khóa luận</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-id-badge"></i> Cập nhật hồ sơ</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa-solid fa-comment-dots"></i> Gửi ý kiến</a>
+                    </li>
+                </ul>
+
+                <!-- Bottom Logo -->
+                <div class="sidebar-bottom">
+                    <div class="logo-placeholder">
+                        <i class="fa-solid fa-graduation-cap"></i> UNIVERSITY Logo
+                    </div>
+                    <p class="design-by">Design by hoangtuan</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- PAGE WRAPPER -->
+        <div class="page-wrapper" id="pageWrapper">
+            
+            <!-- 4. HERO BANNER -->
+            <section class="hero-banner">
+                <div class="hero-container">
+                    <div class="hero-logo">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h2 class="hero-title">UNIVERSITY</h2>
+                    <div class="hero-divider"></div>
+                    <h3 class="hero-subtitle">
+                        CỔNG THÔNG TIN ĐÀO TẠO <span class="text-red">(GIAI ĐOẠN THỬ NGHIỆM)</span>
+                    </h3>
+                </div>
+            </section>
+
+            <!-- CONTENT BODY -->
+            <div class="content-body">
+                
+                <!-- 5. SECTION 1: Training Info -->
+                <section class="section-container">
+                    <div class="section-header">
+                        <h2 class="section-title">THÔNG TIN QUẢN LÝ ĐÀO TẠO</h2>
+                        <a href="#" class="view-more">Xem tiếp <i class="fa-solid fa-angle-right"></i></a>
+                    </div>
+                    <div class="section-divider"></div>
+                    
+                    <div class="grid-4">
+                        <div class="triangle-card">
+                            <div class="card-inner">
+                                <h4 class="card-title">KẾ HOẠCH ĐÀO TẠO</h4>
+                                <div class="card-img-placeholder"><i class="fa-regular fa-calendar-days"></i></div>
+                                <hr class="thin-sep">
+                                <div class="card-date">12/08/2026</div>
+                                <p class="card-bottom-title">Kế hoạch học tập năm 2026-2027</p>
+                            </div>
+                        </div>
+                        <div class="triangle-card">
+                            <div class="card-inner">
+                                <h4 class="card-title">CHƯƠNG TRÌNH ĐÀO TẠO</h4>
+                                <div class="card-img-placeholder"><i class="fa-solid fa-book-open"></i></div>
+                                <hr class="thin-sep">
+                                <div class="card-date">10/08/2026</div>
+                                <p class="card-bottom-title">Khung chương trình chuẩn</p>
+                            </div>
+                        </div>
+                        <div class="triangle-card">
+                            <div class="card-inner">
+                                <h4 class="card-title">QUY CHẾ HỌC VỤ</h4>
+                                <div class="card-img-placeholder"><i class="fa-solid fa-gavel"></i></div>
+                                <hr class="thin-sep">
+                                <div class="card-date">05/08/2026</div>
+                                <p class="card-bottom-title">Quy chế đào tạo tín chỉ mới</p>
+                            </div>
+                        </div>
+                        <div class="triangle-card">
+                            <div class="card-inner">
+                                <h4 class="card-title">HỌC PHÍ</h4>
+                                <div class="card-img-placeholder"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                                <hr class="thin-sep">
+                                <div class="card-date">01/08/2026</div>
+                                <p class="card-bottom-title">Quy định thu học phí HK1</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. SECTION 2: 3-Column Info Board -->
+                <section class="section-container">
+                    <div class="grid-3">
+                        <div class="board-column">
+                            <div class="triangle-card large-card">
+                                <div class="card-inner">
+                                    <h4 class="card-title">THÔNG BÁO</h4>
+                                    <div class="card-img-placeholder"><i class="fa-solid fa-bullhorn"></i></div>
+                                </div>
+                            </div>
+                            <ul class="news-list">
+                                <li>
+                                    <div class="news-badge new">New</div>
+                                    <p class="news-text line-clamp">Thông báo về việc tổ chức Lễ khai giảng năm học 2026-2027.</p>
+                                </li>
+                                <li>
+                                    <div class="news-badge dot"></div>
+                                    <p class="news-text line-clamp">Danh sách sinh viên nhận học bổng khuyến khích học tập HK2.</p>
+                                </li>
+                                <li>
+                                    <div class="news-badge dot"></div>
+                                    <p class="news-text line-clamp">Cập nhật quy định mới về việc gửi xe máy trong khuôn viên.</p>
+                                </li>
+                            </ul>
+                            <a href="#" class="view-more-center">Xem tiếp <i class="fa-solid fa-angle-right"></i></a>
+                        </div>
+
+                        <div class="board-column">
+                            <div class="triangle-card large-card">
+                                <div class="card-inner">
+                                    <h4 class="card-title">ĐĂNG KÝ MÔN HỌC</h4>
+                                    <div class="card-img-placeholder"><i class="fa-solid fa-pen-to-square"></i></div>
+                                </div>
+                            </div>
+                            <ul class="news-list">
+                                <li>
+                                    <div class="news-badge new">New</div>
+                                    <p class="news-text line-clamp">Hướng dẫn đăng ký học phần học kỳ 1 năm học 2026-2027.</p>
+                                </li>
+                                <li>
+                                    <div class="news-badge dot"></div>
+                                    <p class="news-text line-clamp">Thông báo mở lớp tăng cường cho các môn khối ngành CNTT.</p>
+                                </li>
+                                <li>
+                                    <div class="news-badge dot"></div>
+                                    <p class="news-text line-clamp">Lịch hiệu chỉnh đăng ký môn học dành cho sinh viên năm cuối.</p>
+                                </li>
+                            </ul>
+                            <a href="#" class="view-more-center">Xem tiếp <i class="fa-solid fa-angle-right"></i></a>
+                        </div>
+
+                        <div class="board-column">
+                            <div class="triangle-card large-card">
+                                <div class="card-inner">
+                                    <h4 class="card-title">LỊCH THI</h4>
+                                    <div class="card-img-placeholder"><i class="fa-regular fa-clock"></i></div>
+                                </div>
+                            </div>
+                            <ul class="news-list">
+                                <li>
+                                    <div class="news-badge new">New</div>
+                                    <p class="news-text line-clamp">Lịch thi phụ đạo học kỳ Hè dành cho toàn trường.</p>
+                                </li>
+                                <li>
+                                    <div class="news-badge dot"></div>
+                                    <p class="news-text line-clamp">Quy định về việc mang thẻ sinh viên khi tham gia phòng thi.</p>
+                                </li>
+                                <li>
+                                    <div class="news-badge dot"></div>
+                                    <p class="news-text line-clamp">Thông báo điều chỉnh phòng thi môn Cơ sở dữ liệu ngày 20/08.</p>
+                                </li>
+                            </ul>
+                            <a href="#" class="view-more-center">Xem tiếp <i class="fa-solid fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. SECTION 3: Forms -->
+                <section class="section-container">
+                    <h2 class="section-title">BIỂU MẪU</h2>
+                    <div class="section-divider"></div>
+                    <div class="triangle-card wide-card">
+                        <div class="card-inner wide-inner">
+                            <div class="wide-card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                            <div class="wide-card-content">
+                                <h4 class="card-title">TỔNG HỢP BIỂU MẪU DÀNH CHO GIẢNG VIÊN</h4>
+                                <p>Cung cấp các mẫu đơn xin phép nghỉ dạy, đăng ký dạy bù, bảng thanh toán giờ giảng và các biểu mẫu giáo vụ khác.</p>
+                                <a href="#" class="view-more">Tải về ngay <i class="fa-solid fa-download"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- 8. FOOTER -->
+            <footer class="main-footer">
+                <div class="footer-left">
+                    <h4 class="footer-title">UNIVERSITY</h4>
+                    <p><i class="fa-solid fa-location-dot"></i> 123 Đường Đại Học, Thành phố Học Tập</p>
+                    <p><i class="fa-solid fa-phone"></i> Điện thoại: (028) 1234 5678</p>
+                    <p><i class="fa-solid fa-envelope"></i> Email: contact@university.edu.vn</p>
+                </div>
+                
+                <div class="footer-right">
+                    <h4 class="footer-title">THỐNG KÊ TRUY CẬP</h4>
+                    <ul class="stats-list">
+                        <li><span>Đang truy cập:</span> <span class="stat-pill" id="stat-total">0</span></li>
+                        <li><span>Sinh viên đăng nhập:</span> <span class="stat-pill" id="stat-student">0</span></li>
+                        <li><span>Giảng viên đăng nhập:</span> <span class="stat-pill" id="stat-teacher">0</span></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- 9. Floating Action Buttons (FABs) -->
+    <div class="fabs">
+        <button id="scrollTopBtn" class="fab-btn" title="Lên đầu trang">
+            <i class="fa-solid fa-chevron-up"></i>
+        </button>
+        <button class="fab-btn" title="Liên hệ">
+            <i class="fa-solid fa-phone"></i>
+        </button>
+    </div>
+
+    <!-- Tách riêng JS dành cho Teacher -->
+    <script src="/assets/js/teacher.js"></script>
+</body>
+</html>

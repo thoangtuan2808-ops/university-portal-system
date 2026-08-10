@@ -3,7 +3,6 @@ package service;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.sql.DecodeCaseFragment;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.auth0.jwt.JWT;
@@ -45,6 +44,11 @@ public class UserService {
         if (BCrypt.checkpw(password, user.getPasswordHash())) {
             System.out.println("✅ Đăng nhập thành công! Chào mừng: " + user.getUserName());
             System.out.println("🔑 Quyền hạn (Role ID): " + user.getRoleId());
+            if (user.getRoleId() == 3) {
+                StatsManager.addStudent(); 
+            } else if (user.getRoleId() == 2) {
+                StatsManager.addTeacher();
+            }
             return user;
         } else {
             System.out.println("❌ Đăng nhập thất bại: Sai mật khẩu.");
