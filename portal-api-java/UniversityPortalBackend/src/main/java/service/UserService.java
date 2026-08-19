@@ -40,7 +40,6 @@ public class UserService {
         }
 
         // 4. Kiểm tra mật khẩu
-        // (Lưu ý: Tạm thời so sánh chuỗi trực tiếp. Khi ráp API thực tế sẽ thay bằng hàm kiểm tra Hash của thư viện BCrypt)
         if (BCrypt.checkpw(password, user.getPasswordHash())) {
             System.out.println("✅ Đăng nhập thành công! Chào mừng: " + user.getUserName());
             System.out.println("🔑 Quyền hạn (Role ID): " + user.getRoleId());
@@ -68,7 +67,8 @@ public class UserService {
     	return token;
     }
     //kiểm tra token và quyền hạn
-    public boolean checkAuthorization(String token, int requiredRoleId) {
+    //Cập nhật 18/8/2026: Cho phép truyền nhiều RoleID (Ví dụ: checkAuthorization(token, 0, 1))
+    public boolean checkAuthorization(String token, int... allowedRoles) {
     	try {
 			Algorithm algorithm = Algorithm.HMAC256("ChuoiKhoaBiMatCuaRiengBan_KhongDuocDeLo");
 			//xác thực tính hợp lệ token
@@ -76,23 +76,31 @@ public class UserService {
 					.withIssuer("UniversityPortal")
 					.build()
 					.verify(token);//văng nếu token không đúng
+			
 			int userRoleId = jwt.getClaim("roleId").asInt();//rút roleid trong token kiểm tra
-			if(userRoleId==requiredRoleId) {
-				return true;
-			}
-			else {
-				System.out.println("Từ chối truy cập: Không đủ thẩm quyền.");
-				return false;
-			}
+			
+			// LUẬT TỐI THƯỢNG: Nếu là Super Admin (0), cho phép qua mọi trạm!
+            if (userRoleId == 4) {
+                return true;
+            }
+            // Nếu không phải Role 0, kiểm tra xem Role hiện tại có nằm trong danh sách cho phép không
+            for (int role : allowedRoles) {
+                if (userRoleId == role) {
+                    return true;
+                }
+            }
+            System.out.println("Từ chối truy cập: Không đủ thẩm quyền.");
+            return false;
 		} catch (JWTCreationException exception) {
 			// TODO: handle exception
 			System.out.println("Từ chối truy cập: Token không hợp lệ hoặc hết hạn.");
 			return false;
 		}
     }
-    public List<User> getAllUsers(){
-    	return userDAO.getAllUsers();
-    }
+
+	/*
+	 * public List<User> getAllUsers(){ return userDAO.getAllUsers(); }
+	 */
     public boolean lockUser(int userId) {
     	return userDAO.lockUser(userId);
     }
@@ -104,5 +112,9 @@ public class UserService {
     }
     public User getUserById(int userId) {
         return userDAO.getUserById(userId);
+    }
+    // 2. THÊM HÀM MỚI: Gọi lệnh lấy dữ liệu theo Role từ DAO
+    public List<User> getUsersByRole(int roleId) {
+        return userDAO.getUsersByRole(roleId);
     }
 }

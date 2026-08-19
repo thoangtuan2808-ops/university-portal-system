@@ -8,10 +8,12 @@ namespace PortalAdminUI
 {
     internal static class Program
     {
+        // Khai báo 2 chiếc "ví" toàn cục để cất thẻ bài và chức vụ
+        public static string CurrentUserToken = "";
+        public static int CurrentUserRole = -1; // <--- THÊM DÒNG NÀY
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        public static string CurrentUserToken = "";
         [STAThread]
         static void Main()
         {

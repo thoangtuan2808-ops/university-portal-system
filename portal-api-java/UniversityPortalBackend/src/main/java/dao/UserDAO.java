@@ -64,26 +64,49 @@ public class UserDAO {
         
         return user;
     }
-    public List<User> getAllUsers(){
-    	List<User> list = new ArrayList<>();
-    	String sql = "SELECT UserID, UserName, Email, RoleID, IsActive, CreateAt FROM Users";
-    	try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-			while (rs.next()) {
-				User user = new User();
-				user.setUserId(rs.getInt("UserID"));
-				user.setUserName(rs.getString("UserName"));
-				user.setEmail(rs.getString("Email"));;
-				user.setRoleId(rs.getInt("RoleID"));
-				user.setActive(rs.getBoolean("IsActive"));
-				user.setCreatedAt(rs.getTimestamp("CreateAt"));
-				list.add(user);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("Lỗi lấy danh sách User: " +e.getMessage());
-		}
-    	return list;
+
+	/*
+	 * public List<User> getAllUsers(){ List<User> list = new ArrayList<>(); String
+	 * sql =
+	 * "SELECT UserID, UserName, Email, RoleID, IsActive, CreateAt FROM Users"; try
+	 * (Connection conn = DBConnection.getConnection(); PreparedStatement ps =
+	 * conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) { while
+	 * (rs.next()) { User user = new User(); user.setUserId(rs.getInt("UserID"));
+	 * user.setUserName(rs.getString("UserName"));
+	 * user.setEmail(rs.getString("Email"));; user.setRoleId(rs.getInt("RoleID"));
+	 * user.setActive(rs.getBoolean("IsActive"));
+	 * user.setCreatedAt(rs.getTimestamp("CreateAt")); list.add(user); } } catch
+	 * (Exception e) { // TODO: handle exception
+	 * System.out.println("Lỗi lấy danh sách User: " +e.getMessage()); } return
+	 * list; }
+	 */
+ // 1. THÊM HÀM MỚI: Lọc người dùng theo RoleID
+    public List<User> getUsersByRole(int roleId) {
+        List<User> list = new ArrayList<>();
+        // Lấy đúng Role và sắp xếp người mới tạo lên đầu tiên
+        String sql = "SELECT UserID, UserName, Email, RoleID, IsActive, CreateAt FROM Users WHERE RoleID = ? ORDER BY CreateAt DESC";
+        try (Connection conn = DBConnection.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, roleId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User();
+                    user.setUserId(rs.getInt("UserID"));
+                    user.setUserName(rs.getString("UserName"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setRoleId(rs.getInt("RoleID"));
+                    user.setActive(rs.getBoolean("IsActive"));
+                    user.setCreatedAt(rs.getTimestamp("CreateAt"));
+                    list.add(user);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi lấy danh sách User theo Role: " + e.getMessage());
+        }
+        return list;
     }
+    
     public boolean lockUser(int userId) {
     	String sql = "UPDATE Users SET IsActive = 0 WHERE UserID=?";
     	try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -112,16 +135,31 @@ public class UserDAO {
 		}
     	return false;
     }
+ // 2. CẬP NHẬT HÀM CŨ: Sửa hàm updateUser để vá lỗi Password
     public boolean updateUser(User user) {
-    	String sql = "UPDATE Users SET PasswordHash=?, Email=?, RoleID=?, IsActive=? WHERE UserID=?";
+    	// Kiểm tra xem Mật khẩu gửi xuống có bị rỗng hay không
+        boolean isUpdatePassword = user.getPasswordHash() != null && !user.getPasswordHash().trim().isEmpty();
+        String sql;
+        // Nếu có nhập mật khẩu mới -> Cập nhật cả Password
+        if (isUpdatePassword) {
+            sql = "UPDATE Users SET PasswordHash=?, Email=?, RoleID=?, IsActive=? WHERE UserID=?";
+        }
+        // Nếu để trống mật khẩu -> Chỉ cập nhật thông tin khác, GIỮ NGUYÊN Password cũ
+        else {
+            sql = "UPDATE Users SET Email=?, RoleID=?, IsActive=? WHERE UserID=?";
+        }
     	try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-    		String hashedPass = org.mindrot.jbcrypt.BCrypt.hashpw(user.getPasswordHash(), org.mindrot.jbcrypt.BCrypt.gensalt());
-    		ps.setString(1, hashedPass);
-			ps.setString(2, user.getEmail());
-			ps.setInt(3, user.getRoleId());
-			ps.setBoolean(4, user.isActive());
-			ps.setInt(5, user.getUserId());
-			return ps.executeUpdate()>0;
+    		int paramIndex = 1; // Dùng biến đếm để tự động tăng vị trí dấu chấm hỏi (?)
+    		if (isUpdatePassword) {
+                String hashedPass = org.mindrot.jbcrypt.BCrypt.hashpw(user.getPasswordHash(), org.mindrot.jbcrypt.BCrypt.gensalt());
+                ps.setString(paramIndex++, hashedPass);
+            }
+    		ps.setString(paramIndex++, user.getEmail());
+            ps.setInt(paramIndex++, user.getRoleId());
+            ps.setBoolean(paramIndex++, user.isActive());
+            ps.setInt(paramIndex++, user.getUserId());
+            
+            return ps.executeUpdate() > 0;
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Lỗi cập nhật User: "+e.getMessage());

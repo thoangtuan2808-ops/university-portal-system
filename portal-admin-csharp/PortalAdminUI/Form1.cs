@@ -58,10 +58,11 @@ namespace PortalAdminUI
                     if (result != null && result.status == "success")
                     {
                         // --- CHỐT CHẶN 1: KIỂM TRA QUYỀN ---
-                        if (result.roleId == 1)
+                        if (result.roleId == 4 || result.roleId == 1)
                         {
                             // 1. Cất thẻ Token vào "ví" Program
                             Program.CurrentUserToken = result.token;
+                            Program.CurrentUserRole = result.roleId; // <--- CẤT CHỨC VỤ VÀO ĐÂY
 
                             // 2. Mở cửa cho Admin
                             MessageBox.Show($"Đăng nhập thành công! Mã quyền: {result.roleId}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);

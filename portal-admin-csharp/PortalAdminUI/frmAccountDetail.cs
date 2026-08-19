@@ -16,23 +16,10 @@ namespace PortalAdminUI
     public partial class frmAccountDetail : Form
     {
         public int accID = 0; // =0 là thêm mới, >0 là update
-        // 1. Tạo một danh sách kết nối Số (Key) và Chữ (Value)
         
         public frmAccountDetail()
         {
             InitializeComponent();
-            // 1. Tạo một danh sách kết nối Số (Key) và Chữ (Value)
-            var roles = new Dictionary<int, string>()
-            {
-                { 1, "Admin" },
-                { 2, "Teacher" },
-                { 3, "Student" }
-            };
-
-            // 2. Ép ComboBox phải sử dụng danh sách này
-            cboRole.DataSource = new BindingSource(roles, null);
-            cboRole.DisplayMember = "Value"; // Hiển thị chữ (Admin, Teacher...)
-            cboRole.ValueMember = "Key";     // Ngầm hiểu giá trị là số (1, 2...)
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -46,12 +33,21 @@ namespace PortalAdminUI
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    // --- MẶC GIÁP JWT NGAY TỪ ĐẦU CHO MỌI REQUEST ---
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Program.CurrentUserToken);
+
                     // 1. GỌI API LẤY DANH SÁCH QUYỀN
                     HttpResponseMessage roleRes = await client.GetAsync("http://localhost:8080/UniversityPortalBackend/api/roles");
                     if (roleRes.IsSuccessStatusCode)
                     {
                         string roleJson = await roleRes.Content.ReadAsStringAsync();
                         var roles = JsonConvert.DeserializeObject<List<RoleDTO>>(roleJson);
+                        // --- LUẬT CHỐNG TẠO PHẢN TRÊN GIAO DIỆN ---
+                        // Nếu là Admin thường (Role = 1), dùng LING lọc bỏ quyền 4 và 1, chỉ giữ lại từ 2 trở đi
+                        if (Program.CurrentUserRole == 1)
+                        {
+                            roles = roles.Where(r => r.roleId == 2 || r.roleId == 3).ToList();
+                        }
                         cboRole.DataSource = roles;
                         cboRole.DisplayMember = "roleName";
                         cboRole.ValueMember = "roleId";
@@ -60,9 +56,6 @@ namespace PortalAdminUI
                     // 2. GỌI API LẤY CHI TIẾT TÀI KHOẢN (NẾU LÀ CHỨC NĂNG CẬP NHẬT)
                     if (accID > 0)
                     {
-                        // Gắn thẻ bài JWT
-                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Program.CurrentUserToken);
-
                         HttpResponseMessage userRes = await client.GetAsync($"http://localhost:8080/UniversityPortalBackend/api/users/detail?userId={accID}");
                         if (userRes.IsSuccessStatusCode)
                         {
@@ -92,7 +85,8 @@ namespace PortalAdminUI
             try
             {
                 // --- CHỐT CHẶN BẢO MẬT MẬT KHẨU ---
-                if (string.IsNullOrWhiteSpace(txtPassword.Text))
+                // NẾU là Thêm Mới (accID == 0) MÀ để trống Password -> Báo lỗi
+                if (accID == 0 && string.IsNullOrWhiteSpace(txtPassword.Text))
                 {
                     MessageBox.Show("Vui lòng nhập mật khẩu mới hoặc nhập lại mật khẩu cũ trước khi lưu!",
                                     "Cảnh báo bảo mật",
@@ -102,6 +96,7 @@ namespace PortalAdminUI
                     return; // Cắt luồng chạy, không cho gọi xuống HttpClient
                 }
                 using (HttpClient client = new HttpClient()) {
+                    // --- MẶC GIÁP JWT ---
                     client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Program.CurrentUserToken);
                     var content = new FormUrlEncodedContent(new[]
                     {
@@ -112,16 +107,16 @@ namespace PortalAdminUI
                         new KeyValuePair<string, string>("roleId", cboRole.SelectedValue.ToString()),
                         new KeyValuePair<string, string>("isActive", checkIsActive.Checked ? "1" : "0")
                     });
-                    HttpResponseMessage reponse = await client.PostAsync("http://localhost:8080/UniversityPortalBackend/api/users/save", content);
-                    if (reponse.IsSuccessStatusCode) {
+                    HttpResponseMessage response = await client.PostAsync("http://localhost:8080/UniversityPortalBackend/api/users/save", content);
+                    if (response.IsSuccessStatusCode) {
                         MessageBox.Show("Lưu dữ liệu vào tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.DialogResult = DialogResult.OK;
                         this.Close();
                     }
                     else
                     {
-                        string error = await reponse.Content.ReadAsStringAsync();
-                        MessageBox.Show($"Mã HTTP: {reponse.StatusCode}\nChi tiết: {error}", "Bắt mạch lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        string error = await response.Content.ReadAsStringAsync();
+                        MessageBox.Show($"Mã HTTP: {response.StatusCode}\nChi tiết: {error}", "Bắt mạch lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     }
                 }
@@ -129,6 +124,11 @@ namespace PortalAdminUI
             catch (Exception ex) { 
                 MessageBox.Show("Lỗi kết nối API: "+ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }            
+        }
+
+        private void cboRole_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

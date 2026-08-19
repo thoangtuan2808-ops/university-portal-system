@@ -29,7 +29,10 @@ public class UserSaveController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
+		
 		String authHeader = request.getHeader("Authorization");
+		int tokenRoleId = -1; // Biến lưu giữ Role của người đang thao tác
+		
 		try {
 		    // Kiểm tra thẻ có tồn tại không
 		    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -42,14 +45,15 @@ public class UserSaveController extends HttpServlet {
 		    JWTVerifier verifier = JWT.require(algorithm).withIssuer("UniversityPortal").build();
 		    DecodedJWT decodedJWT = verifier.verify(token);
 		    
-		    // Đọc quyền từ Token. Nếu không phải Admin (RoleID = 1) thì đuổi về
-		    int tokenRoleId = decodedJWT.getClaim("roleId").asInt();
-		    if (tokenRoleId != 1) {
-		        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Mã 403
-		        out.print("{\"status\":\"error\", \"message\":\"Bạn không có quyền quản trị!\"}");
-		        out.flush();
-		        return; // ĐÁ VĂNG, DỪNG CHƯƠNG TRÌNH NGAY
-		    }
+		    //Thêm ngày 18/08/2026: Phân quyền truy cập
+		    tokenRoleId = decodedJWT.getClaim("roleId").asInt();
+            if (tokenRoleId != 4 && tokenRoleId != 1) { // Chỉ Super Admin(4) và Admin(1) được vào
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN); 
+                out.print("{\"status\":\"error\", \"message\":\"Bạn không có quyền quản trị!\"}");
+                out.flush();
+                return; 
+            }
+            
 		} catch (Exception ex) {
 		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Mã 401
 		    out.print("{\"status\":\"error\", \"message\":\"Xác thực thất bại!\"}");
@@ -62,16 +66,23 @@ public class UserSaveController extends HttpServlet {
 			String username=request.getParameter("username");
 			String password=request.getParameter("password");
 			String email=request.getParameter("email");
-			int roleId=Integer.parseInt(request.getParameter("roleId"));
+			int targetRoleId = Integer.parseInt(request.getParameter("roleId"));
 			boolean isActive = Integer.parseInt(request.getParameter("isActive"))==1;
 			
+			//Nếu người đang thao tác là Admin thường (1), KHÔNG cho phép gán quyền 4 hoặc 1 cho tài khoản khác
+			if (tokenRoleId == 1 && (targetRoleId == 4 || targetRoleId == 1)) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                out.print("{\"status\":\"error\", \"message\":\"Admin không được phép tạo/sửa tài khoản ngang cấp hoặc cao hơn!\"}");
+                out.flush();
+                return;
+            }
 			//đóng gói dữ liệu
 			User u = new User();
 			u.setUserId(userID);
 			u.setUserName(username);
 			u.setPasswordHash(password);
 			u.setEmail(email);
-			u.setRoleId(roleId);
+			u.setRoleId(targetRoleId);
 			u.setActive(isActive);
 			boolean success=false;
 			String act="";

@@ -69,6 +69,7 @@
             this.cboRole.Name = "cboRole";
             this.cboRole.Size = new System.Drawing.Size(121, 24);
             this.cboRole.TabIndex = 3;
+            this.cboRole.SelectedIndexChanged += new System.EventHandler(this.cboRole_SelectedIndexChanged);
             // 
             // checkIsActive
             // 
