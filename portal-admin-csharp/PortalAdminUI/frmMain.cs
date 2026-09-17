@@ -64,5 +64,33 @@ namespace PortalAdminUI
             frmAccountManagement frm = new frmAccountManagement(3);
             frm.ShowDialog();
         }
+
+        private void sinhViênToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmStudentProfile frm = new frmStudentProfile();
+            frm.ShowDialog();
+        }
+
+        private void giảngViênToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmTeacherProfile frm = new frmTeacherProfile();
+            frm.ShowDialog();
+        }
+
+        private void nhânViênToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmStaffProfile frm = new FrmStaffProfile();
+            frm.ShowDialog();
+        }
+
+        private void quảnLýConNgườiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void quảnLíPhòngBanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -67,16 +67,43 @@
     <Compile Include="frmAccountManagement.Designer.cs">
       <DependentUpon>frmAccountManagement.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmDeparmentManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDeparmentManagement.Designer.cs">
+      <DependentUpon>frmDeparmentManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmStaffProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmStaffProfile.Designer.cs">
+      <DependentUpon>FrmStaffProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmStudentProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStudentProfile.Designer.cs">
+      <DependentUpon>frmStudentProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTeacherProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTeacherProfile.Designer.cs">
+      <DependentUpon>frmTeacherProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginReponse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleDTO.cs" />
+    <Compile Include="StaffProfileDTO.cs" />
+    <Compile Include="StudentProfileDTO.cs" />
+    <Compile Include="TeacherProfileDTO.cs" />
     <Compile Include="UserDTO.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -87,8 +114,20 @@
     <EmbeddedResource Include="frmAccountManagement.resx">
       <DependentUpon>frmAccountManagement.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmDeparmentManagement.resx">
+      <DependentUpon>frmDeparmentManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmStaffProfile.resx">
+      <DependentUpon>FrmStaffProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStudentProfile.resx">
+      <DependentUpon>frmStudentProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTeacherProfile.resx">
+      <DependentUpon>frmTeacherProfile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
