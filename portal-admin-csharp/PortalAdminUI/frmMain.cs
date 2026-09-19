@@ -90,7 +90,8 @@ namespace PortalAdminUI
 
         private void quảnLíPhòngBanToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            frmDeparmentManagement frm = new frmDeparmentManagement();
+            frm.ShowDialog();
         }
     }
 }

@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DepartmentDTO.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +79,12 @@
     </Compile>
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmStaffbyDepartment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStaffbyDepartment.Designer.cs">
+      <DependentUpon>frmStaffbyDepartment.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmStaffProfile.cs">
       <SubType>Form</SubType>
@@ -119,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStaffbyDepartment.resx">
+      <DependentUpon>frmStaffbyDepartment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmStaffProfile.resx">
       <DependentUpon>FrmStaffProfile.cs</DependentUpon>
