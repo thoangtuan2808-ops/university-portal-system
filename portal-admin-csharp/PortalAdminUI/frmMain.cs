@@ -93,5 +93,34 @@ namespace PortalAdminUI
             frmDeparmentManagement frm = new frmDeparmentManagement();
             frm.ShowDialog();
         }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void quảnLíKhoangànhHọcToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmFacultiesAndMajorsManagement frm = new frmFacultiesAndMajorsManagement();
+            frm.ShowDialog();
+        }
+
+        private void quảnLíLớpHànhChínhToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmAdminClassesManagement frm = new frmAdminClassesManagement();
+            frm.ShowDialog();
+        }
+
+        private void quảnLíMônHọcToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmSubjectsManagement frm = new frmSubjectsManagement();
+            frm.ShowDialog();
+        }
+
+        private void chươngTrìnhĐàoTạoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmCurriculumManagement frm = new frmCurriculumManagement();
+            frm.ShowDialog();
+        }
     }
 }
