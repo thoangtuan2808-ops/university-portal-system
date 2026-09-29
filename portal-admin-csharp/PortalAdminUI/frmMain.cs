@@ -122,5 +122,41 @@ namespace PortalAdminUI
             frmCurriculumManagement frm = new frmCurriculumManagement();
             frm.ShowDialog();
         }
+
+        private void quảnLíHọcKìToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmSemesters frm = new frmSemesters();
+            frm.ShowDialog();
+        }
+
+        private void quảnLíPhòngHọcToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmRooms frm = new frmRooms();
+            frm.ShowDialog();
+        }
+
+        private void mởLớpHọcPhầnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmCourseClasses frm = new frmCourseClasses();
+            frm.ShowDialog();
+        }
+
+        private void thờiKhóaBiểuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmTimetables frm = new frmTimetables();
+            frm.ShowDialog();
+        }
+
+        private void đăngKíTínChỉToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmRegistrations frm = new frmRegistrations();
+            frm.ShowDialog();
+        }
+
+        private void quảnLíBảngĐiểmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmGrades frm = new frmGrades();
+            frm.ShowDialog();
+        }
     }
 }

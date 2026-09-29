@@ -1,40 +1,32 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace PortalAdminUI
 {
-    public partial class Form1 : Form
+    public partial class DangNhap : Form
     {
-        public Form1()
+        public DangNhap()
         {
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private async void btnLogin_Click(object sender, EventArgs e) ///async để gọi api bất đồng bộ tránh bị đơ giao diện
+        private async void guna2Button1_Click(object sender, EventArgs e)
         {
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
 
-            if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)) {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
                 MessageBox.Show("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -46,7 +38,8 @@ namespace PortalAdminUI
             }
             try
             {
-                using (HttpClient client = new HttpClient()) {
+                using (HttpClient client = new HttpClient())
+                {
                     var content = new FormUrlEncodedContent(new[]
                     {
                         new KeyValuePair<string, string>("username", username),
@@ -84,20 +77,10 @@ namespace PortalAdminUI
                     }
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                MessageBox.Show("Lỗi kết nối máy chủ API: " +ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error );
+                MessageBox.Show("Lỗi kết nối máy chủ API: " + ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtUsername_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
